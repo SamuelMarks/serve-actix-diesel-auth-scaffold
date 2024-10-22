@@ -1,5 +1,3 @@
-use actix_web::web::Data;
-
 #[derive(clap::Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
@@ -42,6 +40,12 @@ async fn main() -> std::io::Result<()> {
             }
         }
     }
+    if let Some(env_vec) = args.env {
+        env.extend(env_vec.iter().filter_map(|s| match s.split_once("=") {
+            None => None,
+            Some((k, v)) => Some((k.to_string(), v.to_string())),
+        }));
+    };
     env.iter().for_each(|(k, v)| std::env::set_var(k, v));
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
@@ -50,7 +54,7 @@ async fn main() -> std::io::Result<()> {
 
     actix_web::HttpServer::new(move || {
         actix_web::App::new()
-            .app_data(Data::new(pool.clone()))
+            .app_data(actix_web::web::Data::new(pool.clone()))
             .service(rust_actix_diesel_auth_scaffold::routes::token::token)
             .service(rust_actix_diesel_auth_scaffold::routes::authorisation::authorise)
     })
