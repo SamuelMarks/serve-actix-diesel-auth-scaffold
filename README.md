@@ -6,6 +6,31 @@ Server entrypoint scaffold to get you started using actix + diesel with a custom
 
 Backend implementation to be found at parent repository: https://github.com/SamuelMarks/rust-actix-diesel-auth-scaffold (clone this one directory above to build)
 
+## Why
+
+Honestly everything else is too complicated. When you just want some access tokens and to get started real quick, this is what you need.
+
+Once the server is up—setup/usage notes follow—you can just:
+
+    curl -X POST http://localhost:8080/api/token \
+         -H 'Content-Type: application/json' \
+         -H 'Accept: application/json' \
+         -d '{"grant_type": "password", "username": "user", "password": "pass"}'
+
+Which—registering user if nonexistent—returns of the form:
+```json
+{
+    "access_token": "user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435",
+    "token_type": "Bearer",
+    "expires_in": 3600
+}
+```
+
+Then you can use this the regular way, for example:
+
+    curl http://localhost:8080/secured/secret \
+         -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
+
 ## Usage
 
 Install Rust, `git`, and ensure you have your PostgreSQL and Redis/Valkey services setup.
