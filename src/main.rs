@@ -22,6 +22,29 @@ struct Cli {
     env: Option<Vec<String>>,
 }
 
+#[derive(serde::Serialize)]
+struct Version {
+    version: String,
+    name: String,
+}
+
+impl Default for Version {
+    fn default() -> Self {
+        Self {
+            version: String::from(env!("CARGO_PKG_VERSION")),
+            name: String::from(env!("CARGO_PKG_NAME")),
+        }
+    }
+}
+
+#[actix_web::get("/")]
+async fn version() -> actix_web::web::Json<Version> {
+    actix_web::web::Json(Version {
+        version: String::from(env!("CARGO_PKG_VERSION")),
+        name: String::from(env!("CARGO_PKG_NAME")),
+    })
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let args: Cli = clap::Parser::parse();
@@ -57,6 +80,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(actix_web::web::Data::new(pool.clone()))
             .service(rust_actix_diesel_auth_scaffold::routes::token::token)
             .service(rust_actix_diesel_auth_scaffold::routes::authorisation::authorise)
+            .service(version)
     })
     .bind((args.hostname.as_str(), args.port))?
     .run()

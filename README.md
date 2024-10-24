@@ -27,12 +27,12 @@ Add an `.env` file or otherwise add these environment variables; replacing conne
     
     Options:
     --hostname <HOSTNAME>  Hostname [default: localhost]
-    -p, --port <PORT>          Port [default: 8080]
+    -p, --port <PORT>      Port [default: 8080]
     --no-host-env          Avoid inheriting host environment variables
     --env-file <ENV_FILE>  Env file, defaults to ".env"
-    -e, --env <ENV>            Env var (can be specified multiple times, like `-eFOO=5 -eBAR=can`)
-    -h, --help                 Print help
-    -V, --version              Print version
+    -e, --env <ENV>        Env var (can be specified multiple times, like `-eFOO=5 -eBAR=can`)
+    -h, --help             Print help
+    -V, --version          Print version
 
 ## Contribution guide
 Ensure all tests are passing [`cargo test`](https://doc.rust-lang.org/cargo/commands/cargo-test.html) and [`rustfmt`](https://github.com/rust-lang/rustfmt) has been run. This can be with [`cargo make`](https://github.com/sagiegurari/cargo-make); installable with:

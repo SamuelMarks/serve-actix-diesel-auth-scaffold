@@ -1,14 +1,15 @@
 [package]
 name = "serve-actix-diesel-auth-scaffold"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
 actix-web = "^4"
-diesel = { version = "2.2.4", features = ["postgres"] }
+clap = { version = "^4.5", features = ["derive"] }
+diesel = { version = "^2.2", features = ["postgres"] }
 dotenvy = "^0.15"
 env_logger = "^0.11"
-#rust-actix-diesel-auth-scaffold = { git = "https://github.com/offscale/rust-actix-diesel-auth-scaffold", version = "0.0.1" }
+indexmap = "^2.6"
 rust-actix-diesel-auth-scaffold = { path = "../rust-actix-diesel-auth-scaffold" }
-clap = { version = "4.5.20", features = ["derive"] }
-indexmap = "2.6.0"
+#rust-actix-diesel-auth-scaffold = { git = "https://github.com/offscale/rust-actix-diesel-auth-scaffold", version = "0.0.1" }
+serde = { version = "^1", features = ["derive"] }
