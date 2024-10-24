@@ -37,7 +37,7 @@ impl Default for Version {
     }
 }
 
-#[actix_web::get("/")]
+#[actix_web::get("")]
 async fn version() -> actix_web::web::Json<Version> {
     actix_web::web::Json(Version {
         version: String::from(env!("CARGO_PKG_VERSION")),
@@ -78,9 +78,21 @@ async fn main() -> std::io::Result<()> {
     actix_web::HttpServer::new(move || {
         actix_web::App::new()
             .app_data(actix_web::web::Data::new(pool.clone()))
-            .service(rust_actix_diesel_auth_scaffold::routes::token::token)
-            .service(rust_actix_diesel_auth_scaffold::routes::authorisation::authorise)
-            .service(version)
+            .service(
+                actix_web::web::scope("/api")
+                    .service(rust_actix_diesel_auth_scaffold::routes::token::token)
+                    .service(rust_actix_diesel_auth_scaffold::routes::authorisation::authorise)
+                    .service(version),
+            )
+            .service(
+                actix_web::web::scope("/secured")
+                    .wrap(actix_web::middleware::Compat::new(
+                        actix_web_httpauth::middleware::HttpAuthentication::bearer(
+                            rust_actix_diesel_auth_scaffold::middleware::bearer::validator,
+                        ),
+                    ))
+                    .service(rust_actix_diesel_auth_scaffold::routes::secret::secret),
+            )
     })
     .bind((args.hostname.as_str(), args.port))?
     .run()
