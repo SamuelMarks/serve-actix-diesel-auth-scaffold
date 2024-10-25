@@ -9,7 +9,9 @@ services:
       POSTGRES_PASSWORD: rest_api_pass
       POSTGRES_DB: rest_api_db
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: debian.Dockerfile
     ports:
       - "3000:3000"
     depends_on:
