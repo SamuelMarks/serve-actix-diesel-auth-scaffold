@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 actix-web = "^4"
 actix-web-httpauth = "0.8.2"
-clap = { version = "^4.5", features = ["derive"] }
+clap = { version = "^4.5", features = ["derive", "env"] }
 diesel = { version = "^2.2", features = ["postgres"] }
 dotenvy = "^0.15"
 env_logger = "^0.11"

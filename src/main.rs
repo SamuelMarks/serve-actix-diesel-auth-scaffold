@@ -2,11 +2,11 @@
 #[command(version, about, long_about = None)]
 struct Cli {
     /// Hostname
-    #[arg(long, default_value = "localhost")]
+    #[arg(long, default_value = "localhost", env="SADAS_HOSTNAME")]
     hostname: String,
 
     /// Port
-    #[arg(short, long, default_value_t = 3000u16)]
+    #[arg(short, long, default_value_t = 3000u16, env="SADAS_PORT")]
     port: u16,
 
     /// Avoid inheriting host environment variables

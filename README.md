@@ -11,11 +11,12 @@ Backend implementation to be found at parent repository: https://github.com/Samu
 Honestly everything else is too complicated. When you just want some access tokens and to get started real quick, this is what you need.
 
 Once the server is up—setup/usage notes follow—you can just:
-
-    curl -X POST http://localhost:3000/api/token \
-         -H 'Content-Type: application/json' \
-         -H 'Accept: application/json' \
-         -d '{"grant_type": "password", "username": "user", "password": "pass"}'
+```sh
+$ curl -X POST http://localhost:3000/api/token \
+       -H 'Content-Type: application/json' \
+       -H 'Accept: application/json' \
+       -d '{"grant_type": "password", "username": "user", "password": "pass"}'
+```
 
 Which—registering user if nonexistent—returns of the form:
 ```json
@@ -28,10 +29,36 @@ Which—registering user if nonexistent—returns of the form:
 
 Then you can use this the regular way, for example:
 
-    curl http://localhost:3000/secured/secret \
-         -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
+```sh
+$ curl http://localhost:3000/secured/secret \
+       -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
+```
 
-## Usage
+## Docker usage
+
+Install Docker, and then run the following, which will make a server available at http://localhost:3000:
+```sh
+$ docker compose up
+````
+
+NOTE: You may need to configure this for your architecture first, for example:
+```sh
+$ docker compose build --build-arg ARCH_VARIANT='amd64' \
+                       --build-arg ARCH='x86_64'
+$ docker compose up
+```
+
+Or to work with just one image and provide your own database and redis:
+```sh
+$ docker build -f 'debian.Dockerfile' -t "${PWD##*/}"':latest' .
+$ docker run -e DATABASE_URL="$RDBMS_URI" \
+             -e REDIS_URL='localhost:6379' \
+             -p '3000:3000' \
+             --name 'serve_api' \
+             "${PWD##*/}"
+```
+
+## Native usage
 
 Install Rust, `git`, and ensure you have your PostgreSQL and Redis/Valkey services setup.
 
@@ -51,13 +78,13 @@ Add an `.env` file or otherwise add these environment variables; replacing conne
     Usage: serve-actix-diesel-auth-scaffold [OPTIONS]
     
     Options:
-    --hostname <HOSTNAME>  Hostname [default: localhost]
-    -p, --port <PORT>      Port [default: 3000]
-    --no-host-env          Avoid inheriting host environment variables
-    --env-file <ENV_FILE>  Env file, defaults to ".env"
-    -e, --env <ENV>        Env var (can be specified multiple times, like `-eFOO=5 -eBAR=can`)
-    -h, --help             Print help
-    -V, --version          Print version
+          --hostname <HOSTNAME>  Hostname [env: SADAS_HOSTNAME=] [default: localhost]
+      -p, --port <PORT>          Port [env: SADAS_PORT=] [default: 3000]
+          --no-host-env          Avoid inheriting host environment variables
+          --env-file <ENV_FILE>  Env file, defaults to ".env"
+      -e, --env <ENV>            Env var (can be specified multiple times, like `-eFOO=5 -eBAR=can`)
+      -h, --help                 Print help
+      -V, --version              Print version
 
 ## Contribution guide
 Ensure all tests are passing [`cargo test`](https://doc.rust-lang.org/cargo/commands/cargo-test.html) and [`rustfmt`](https://github.com/rust-lang/rustfmt) has been run. This can be with [`cargo make`](https://github.com/sagiegurari/cargo-make); installable with:
