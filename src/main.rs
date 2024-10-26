@@ -2,11 +2,11 @@
 #[command(version, about, long_about = None)]
 struct Cli {
     /// Hostname
-    #[arg(long, default_value = "localhost", env="SADAS_HOSTNAME")]
+    #[arg(long, default_value = "localhost", env = "SADAS_HOSTNAME")]
     hostname: String,
 
     /// Port
-    #[arg(short, long, default_value_t = 3000u16, env="SADAS_PORT")]
+    #[arg(short, long, default_value_t = 3000u16, env = "SADAS_PORT")]
     port: u16,
 
     /// Avoid inheriting host environment variables
@@ -91,7 +91,8 @@ async fn main() -> std::io::Result<()> {
                             rust_actix_diesel_auth_scaffold::middleware::bearer::validator,
                         ),
                     ))
-                    .service(rust_actix_diesel_auth_scaffold::routes::secret::secret),
+                    .service(rust_actix_diesel_auth_scaffold::routes::secret::secret)
+                    .service(rust_actix_diesel_auth_scaffold::routes::logout::logout),
             )
     })
     .bind((args.hostname.as_str(), args.port))?

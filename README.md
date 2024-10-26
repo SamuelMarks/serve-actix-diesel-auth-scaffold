@@ -1,4 +1,4 @@
-rust-actix-diesel-auth-scaffold
+serve-actix-diesel-auth-scaffold
 ===============================
 [![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT%20OR%20CC0--1.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
