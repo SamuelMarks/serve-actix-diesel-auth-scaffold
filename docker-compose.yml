@@ -23,8 +23,10 @@ services:
       SADAS_HOSTNAME: 0.0.0.0
       SADAS_PORT: 3000
     # network_mode: host
-#    entrypoint: [ "/usr/local/bin/wait4x", "postgresql", "postgres:5432", "--",
-#      #                  "${DATABASE_URL}"
-#                  "/usr/local/bin/wait4x", "redis", "redis:6379", "&&",
-#      #                  "${REDIS_URL}"
-#                  "/app/bin/serve-actix-diesel-auth-scaffold" ]
+    entrypoint: [
+      "/usr/local/bin/wait4x", "postgresql", "postgres://rest_api_user:rest_api_pass@postgres:5432/rest_api_db?sslmode=disable", "--",
+      #      #                  "${DATABASE_URL}"
+      #                  "/usr/local/bin/wait4x", "redis", "valkey", "&&",
+      #      #                  "${REDIS_URL}"
+      "/app/bin/serve-actix-diesel-auth-scaffold"
+    ]

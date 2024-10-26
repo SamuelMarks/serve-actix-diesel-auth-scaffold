@@ -72,6 +72,8 @@ async fn main() -> std::io::Result<()> {
     env.iter().for_each(|(k, v)| std::env::set_var(k, v));
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
+    rust_actix_diesel_auth_scaffold::db_init();
+
     let manager = diesel::r2d2::ConnectionManager::<diesel::PgConnection>::new(database_url);
     let pool = diesel::r2d2::Pool::builder().build(manager).unwrap();
 
