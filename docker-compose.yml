@@ -20,6 +20,9 @@ services:
     environment:
       DATABASE_URL: postgres://rest_api_user:rest_api_pass@postgres/rest_api_db
       REDIS_URL: http://redis
-    command: ["/bin/wait_for_it.sh", "postgres:5432", "--",
-              "/bin/wait_for_it.sh", "redis:6379", "--",
-              "/src/release/serve-actix-diesel-auth-scaffold"]
+    # network_mode: host
+#    entrypoint: [ "/usr/local/bin/wait4x", "postgresql", "postgres:5432", "--",
+#      #                  "${DATABASE_URL}"
+#                  "/usr/local/bin/wait4x", "redis", "redis:6379", "&&",
+#      #                  "${REDIS_URL}"
+#                  "/app/bin/serve-actix-diesel-auth-scaffold" ]

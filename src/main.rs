@@ -6,7 +6,7 @@ struct Cli {
     hostname: String,
 
     /// Port
-    #[arg(short, long, default_value_t = 8080u16)]
+    #[arg(short, long, default_value_t = 3000u16)]
     port: u16,
 
     /// Avoid inheriting host environment variables

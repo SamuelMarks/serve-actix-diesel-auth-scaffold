@@ -12,7 +12,7 @@ Honestly everything else is too complicated. When you just want some access toke
 
 Once the server is up—setup/usage notes follow—you can just:
 
-    curl -X POST http://localhost:8080/api/token \
+    curl -X POST http://localhost:3000/api/token \
          -H 'Content-Type: application/json' \
          -H 'Accept: application/json' \
          -d '{"grant_type": "password", "username": "user", "password": "pass"}'
@@ -28,7 +28,7 @@ Which—registering user if nonexistent—returns of the form:
 
 Then you can use this the regular way, for example:
 
-    curl http://localhost:8080/secured/secret \
+    curl http://localhost:3000/secured/secret \
          -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
 
 ## Usage
@@ -52,7 +52,7 @@ Add an `.env` file or otherwise add these environment variables; replacing conne
     
     Options:
     --hostname <HOSTNAME>  Hostname [default: localhost]
-    -p, --port <PORT>      Port [default: 8080]
+    -p, --port <PORT>      Port [default: 3000]
     --no-host-env          Avoid inheriting host environment variables
     --env-file <ENV_FILE>  Env file, defaults to ".env"
     -e, --env <ENV>        Env var (can be specified multiple times, like `-eFOO=5 -eBAR=can`)
