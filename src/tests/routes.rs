@@ -3,16 +3,13 @@ use crate::Version;
 #[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq)]
 struct VersionForTest {
     version: String,
-    upvote_backend: String,
     radas: String,
     name: String,
 }
 
 impl VersionForTest {
     fn eq(&self, other: &Version) -> bool {
-        self.radas == other.radas
-            && self.version == other.version
-            && self.name == other.name
+        self.radas == other.radas && self.version == other.version && self.name == other.name
     }
 }
 
