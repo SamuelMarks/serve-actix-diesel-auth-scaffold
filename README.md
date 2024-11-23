@@ -34,6 +34,149 @@ $ curl http://localhost:3000/secured/secret \
        -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
 ```
 
+## Path Table
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | [/api](#getapi) | Versions of this package and its first-party dependencies |
+| POST | [/api/token](#postapitoken) | Generate a token for a grant flow.
+Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
+| POST | [/secured/logout](#postsecuredlogout) | Logout a user (uses provided Bearer token from Header) |
+| GET | [/secured/secret](#getsecuredsecret) | Shows secret to authenticated user (uses provided Bearer token from Header) |
+
+## Reference Table
+
+| Name | Path | Description |
+| --- | --- | --- |
+| GrantType | [#/components/schemas/GrantType](#componentsschemasgranttype) |  |
+| TokenRequest | [#/components/schemas/TokenRequest](#componentsschemastokenrequest) |  |
+| password | [#/components/securitySchemes/password](#componentssecurityschemespassword) |  |
+
+## Path Details
+
+***
+
+### [GET]/api
+
+- Summary  
+  Versions of this package and its first-party dependencies
+
+#### Responses
+
+***
+
+### [POST]/api/token
+
+- Summary  
+  Generate a token for a grant flow.  
+  Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+
+#### RequestBody
+
+- application/x-www-form-urlencoded
+
+```json
+{
+  // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
+  client_id?: string | null
+  // optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)
+  client_secret?: string | null
+  grant_type: enum[password, authorization_code, client_credentials, refresh_token]
+  // optional password (as used, for example, in RFC6749's password grant flow)
+  password?: string | null
+  // optional refresh token (as used, for example, in RFC6749's refresh grant flow)
+  refresh_token?: string | null
+  // optional username (as used, for example, in RFC6749's password grant flow)
+  username?: string | null
+}
+```
+
+#### Responses
+
+- 200 Token created
+
+- 400 Unauthorized User
+
+- 404 Not Found User
+
+- 500 Bad Request
+
+***
+
+### [POST]/secured/logout
+
+- Summary  
+  Logout a user (uses provided Bearer token from Header)
+
+- Security  
+  password
+
+#### Responses
+
+- 200
+
+***
+
+### [GET]/secured/secret
+
+- Summary  
+  Shows secret to authenticated user (uses provided Bearer token from Header)
+
+- Security  
+  password
+
+#### Responses
+
+- 200 secret endpoint
+
+## References
+
+### #/components/schemas/GrantType
+
+```json
+{
+  "type": "string",
+  "enum": [
+    "password",
+    "authorization_code",
+    "client_credentials",
+    "refresh_token"
+  ]
+}
+```
+
+### #/components/schemas/TokenRequest
+
+```ts
+{
+  // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
+  client_id?: string | null
+  // optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)
+  client_secret?: string | null
+  grant_type: enum[password, authorization_code, client_credentials, refresh_token]
+  // optional password (as used, for example, in RFC6749's password grant flow)
+  password?: string | null
+  // optional refresh token (as used, for example, in RFC6749's refresh grant flow)
+  refresh_token?: string | null
+  // optional username (as used, for example, in RFC6749's password grant flow)
+  username?: string | null
+}
+```
+
+### #/components/securitySchemes/password
+
+```json
+{
+  "type": "oauth2",
+  "flows": {
+    "password": {
+      "tokenUrl": "/api/token",
+      "scopes": {}
+    }
+  }
+}
+```
+
 ## Docker usage
 
 Install Docker, and then run the following, which will make a server available at http://localhost:3000:
