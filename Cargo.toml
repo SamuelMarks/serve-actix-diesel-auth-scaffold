@@ -13,7 +13,7 @@ dotenvy = "^0.15"
 env_logger = "^0.11"
 indexmap = "^2.6"
 #rust-actix-diesel-auth-scaffold = { path = "../rust-actix-diesel-auth-scaffold" }
-rust-actix-diesel-auth-scaffold = { git = "https://github.com/offscale/rust-actix-diesel-auth-scaffold", version = "*" }
+rust-actix-diesel-auth-scaffold = { git = "https://github.com/offscale/rust-actix-diesel-auth-scaffold" }
 serde = { version = "^1", features = ["derive"] }
 serde_json = { version = "1.0.133", features = ["indexmap"] }
 utoipa = { version = "^5.2", features = ["actix_extras"] }
