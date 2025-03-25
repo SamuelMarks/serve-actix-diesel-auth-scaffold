@@ -75,7 +75,7 @@ Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
 
 - application/x-www-form-urlencoded
 
-```json
+```yaml
 {
   // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
   client_id?: string | null
