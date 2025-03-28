@@ -1,0 +1,50 @@
+name: build & test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+    runner-job:
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_PASSWORD: postgres
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+            redis:
+                image: redis
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+
+          - name: Use Rust nightly
+            uses: actions-rust-lang/setup-rust-toolchain@v1
+            with:
+              toolchain: nightly
+
+          - name: Install dependencies, compile, and test
+            run: |
+              cargo build
+              cargo test
+            env:
+                DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+                POSTGRES_HOST: localhost
+                POSTGRES_PORT: 5432
+                RDBMS_URI: postgres://postgres:postgres@localhost:5432/postgres
+                REDIS_HOST: redis
+                REDIS_PORT: 6379
