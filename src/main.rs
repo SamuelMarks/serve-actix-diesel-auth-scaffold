@@ -108,7 +108,9 @@ async fn main() -> std::io::Result<()> {
             Some((k, v)) => Some((k.to_string(), v.to_string())),
         }));
     };
-    env.iter().for_each(|(k, v)| std::env::set_var(k, v));
+    unsafe {
+        env.iter().for_each(|(k, v)| std::env::set_var(k, v));
+    }
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
     rust_actix_diesel_auth_scaffold::db_init();

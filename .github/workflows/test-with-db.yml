@@ -6,45 +6,47 @@ on:
       - master
 
 jobs:
-    runner-job:
-        runs-on: ubuntu-latest
+  build_and_test:
+    runs-on: ubuntu-latest
 
-        services:
-            postgres:
-                image: postgres
-                env:
-                    POSTGRES_PASSWORD: postgres
-                options: >-
-                    --health-cmd pg_isready
-                    --health-interval 10s
-                    --health-timeout 5s
-                    --health-retries 5
-                ports:
-                    - 5432:5432
-            redis:
-                image: redis
-                options: >-
-                    --health-cmd "redis-cli ping"
-                    --health-interval 10s
-                    --health-timeout 5s
-                    --health-retries 5
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: rest_user
+          POSTGRES_PASSWORD: rest_pass
+          POSTGRES_DB: rest_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-          - name: Use Rust nightly
-            uses: actions-rust-lang/setup-rust-toolchain@v1
-            with:
-              toolchain: nightly
+      - name: Use Rust nightly
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
 
-          - name: Install dependencies, compile, and test
-            run: |
-              cargo build
-              cargo test
-            env:
-                DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-                POSTGRES_HOST: localhost
-                POSTGRES_PORT: 5432
-                RDBMS_URI: postgres://postgres:postgres@localhost:5432/postgres
-                REDIS_HOST: redis
-                REDIS_PORT: 6379
+      - name: Install dependencies, compile, and test
+        run: |
+          cargo build
+          cargo test
+        env:
+          DATABASE_URL: postgres://rest_user:rest_pass@localhost:5432/rest_db
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          RDBMS_URI: postgres://rest_user:rest_pass@localhost:5432/rest_db
+          REDIS_HOST: redis
+          REDIS_PORT: 6379

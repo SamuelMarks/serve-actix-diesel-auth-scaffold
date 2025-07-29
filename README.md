@@ -1,16 +1,20 @@
 serve-actix-diesel-auth-scaffold
 ===============================
 [![License](https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT%20OR%20CC0--1.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![build & test](https://github.com/SamuelMarks/serve-actix-diesel-auth-scaffold/actions/workflows/test-with-db.yml/badge.svg)](https://github.com/SamuelMarks/serve-actix-diesel-auth-scaffold/actions/workflows/test-with-db.yml)
 
 Server entrypoint scaffold to get you started using actix + diesel with a custom OAuth2 implementation.
 
-Backend implementation to be found at parent repository: https://github.com/SamuelMarks/rust-actix-diesel-auth-scaffold (clone this one directory above to build)
+Backend implementation to be found at parent
+repository: https://github.com/SamuelMarks/rust-actix-diesel-auth-scaffold (clone this one directory above to build)
 
 ## Why
 
-Honestly everything else is too complicated. When you just want some access tokens and to get started real quick, this is what you need.
+Honestly everything else is too complicated. When you just want some access tokens and to get started real quick, this
+is what you need.
 
 Once the server is up—setup/usage notes follow—you can just:
+
 ```sh
 $ curl -X POST http://localhost:3000/api/token \
        -H 'Content-Type: application/json' \
@@ -19,11 +23,12 @@ $ curl -X POST http://localhost:3000/api/token \
 ```
 
 Which—registering user if nonexistent—returns of the form:
+
 ```json
 {
-    "access_token": "user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435",
-    "token_type": "Bearer",
-    "expires_in": 3600
+  "access_token": "user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435",
+  "token_type": "Bearer",
+  "expires_in": 3600
 }
 ```
 
@@ -36,21 +41,21 @@ $ curl http://localhost:3000/secured/secret \
 
 ## Path Table
 
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | [/api](#getapi) | Versions of this package and its first-party dependencies |
-| POST | [/api/token](#postapitoken) | Generate a token for a grant flow.
-Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
-| POST | [/secured/logout](#postsecuredlogout) | Logout a user (uses provided Bearer token from Header) |
-| GET | [/secured/secret](#getsecuredsecret) | Shows secret to authenticated user (uses provided Bearer token from Header) |
+| Method                                                                 | Path                                  | Description                                                                 |
+|------------------------------------------------------------------------|---------------------------------------|-----------------------------------------------------------------------------|
+| GET                                                                    | [/api](#getapi)                       | Versions of this package and its first-party dependencies                   |
+| POST                                                                   | [/api/token](#postapitoken)           | Generate a token for a grant flow.                                          
+ Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
+| POST                                                                   | [/secured/logout](#postsecuredlogout) | Logout a user (uses provided Bearer token from Header)                      |
+| GET                                                                    | [/secured/secret](#getsecuredsecret)  | Shows secret to authenticated user (uses provided Bearer token from Header) |
 
 ## Reference Table
 
-| Name | Path | Description |
-| --- | --- | --- |
-| GrantType | [#/components/schemas/GrantType](#componentsschemasgranttype) |  |
-| TokenRequest | [#/components/schemas/TokenRequest](#componentsschemastokenrequest) |  |
-| password | [#/components/securitySchemes/password](#componentssecurityschemespassword) |  |
+| Name         | Path                                                                        | Description |
+|--------------|-----------------------------------------------------------------------------|-------------|
+| GrantType    | [#/components/schemas/GrantType](#componentsschemasgranttype)               |             |
+| TokenRequest | [#/components/schemas/TokenRequest](#componentsschemastokenrequest)         |             |
+| password     | [#/components/securitySchemes/password](#componentssecurityschemespassword) |             |
 
 ## Path Details
 
@@ -75,7 +80,7 @@ Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
 
 - application/x-www-form-urlencoded
 
-```yaml
+```ts
 {
   // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
   client_id?: string | null
@@ -180,11 +185,13 @@ Implements https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3 |
 ## Docker usage
 
 Install Docker, and then run the following, which will make a server available at http://localhost:3000:
+
 ```sh
 $ docker compose up
 ````
 
 NOTE: You may need to configure this for your architecture first, for example:
+
 ```sh
 $ docker compose build --build-arg ARCH_VARIANT='amd64' \
                        --build-arg ARCH='x86_64'
@@ -192,6 +199,7 @@ $ docker compose up
 ```
 
 Or to work with just one image and provide your own database and redis:
+
 ```sh
 $ docker build -f 'debian.Dockerfile' -t "${PWD##*/}"':latest' .
 $ docker run -e DATABASE_URL="$RDBMS_URI" \
@@ -204,6 +212,37 @@ $ docker run -e DATABASE_URL="$RDBMS_URI" \
 ## Native usage
 
 Install Rust, `git`, and ensure you have your PostgreSQL and Redis/Valkey services setup.
+
+### PostgreSQL
+
+One way to install PostgreSQL is with my cross-platform https://github.com/SamuelMarks/libscript:
+
+```sh
+$ [ -d /tmp/libscript ] || git clone --depth=1 --single-branch https://github.com/SamuelMarks/libscript /tmp/libscript
+$ env -i HOME="$HOME" \
+         PATH="$PATH" \
+         POSTGRES_USER='rest_user' \
+         POSTGRES_SERVICE_PASSWORD='addGoodPasswordhere' \
+         POSTGRES_PASSWORD='rest_pass' \
+         POSTGRES_HOST='localhost' \
+         POSTGRES_DB='rest_db' \
+         '/tmp/libscript/_lib/_storage/postgres/setup.sh'
+```
+
+(on Windows use `set` and `libscript\_lib\_storage\postgres\setup.cmd`)
+
+### Valkey (Redis-compatible)
+
+One way to install the Redis-compatible Valkey is with my cross-platform https://github.com/SamuelMarks/libscript:
+
+```sh
+$ [ -d libscript ] || git clone --depth=1 --single-branch https://github.com/SamuelMarks/libscript
+$ env -i HOME="$HOME" \
+         PATH="$PATH" \
+         "$(pwd)"'/libscript/_lib/_storage/valkey/setup.sh'
+```
+
+(on Windows use Garnet: https://github.com/microsoft/garnet)
 
 ### Environment setup
 
@@ -230,18 +269,23 @@ Add an `.env` file or otherwise add these environment variables; replacing conne
       -V, --version              Print version
 
 ## Contribution guide
-Ensure all tests are passing [`cargo test`](https://doc.rust-lang.org/cargo/commands/cargo-test.html) and [`rustfmt`](https://github.com/rust-lang/rustfmt) has been run. This can be with [`cargo make`](https://github.com/sagiegurari/cargo-make); installable with:
+
+Ensure all tests are passing [`cargo test`](https://doc.rust-lang.org/cargo/commands/cargo-test.html) and [
+`rustfmt`](https://github.com/rust-lang/rustfmt) has been run. This can be with [
+`cargo make`](https://github.com/sagiegurari/cargo-make); installable with:
 
 ```sh
 $ cargo install --force cargo-make
 ```
 
 Then run:
+
 ```sh
 $ cargo make
 ```
 
-Finally, we recommend [feature-branches](https://martinfowler.com/bliki/FeatureBranch.html) with an accompanying [pull-request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
+Finally, we recommend [feature-branches](https://martinfowler.com/bliki/FeatureBranch.html) with an
+accompanying [pull-request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests).
 </small>
 
 <hr/>
