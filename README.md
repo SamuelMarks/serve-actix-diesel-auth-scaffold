@@ -20,6 +20,8 @@ $ curl -X POST http://localhost:3000/api/token \
        -H 'Content-Type: application/json' \
        -H 'Accept: application/json' \
        -d '{"grant_type": "password", "username": "user", "password": "pass"}'
+# or, for example, with `httpie`
+$ http POST :3000/api/token grant_type='password' username='user' password='pass'
 ```
 
 Which—registering user if nonexistent—returns of the form:
@@ -37,6 +39,8 @@ Then you can use this the regular way, for example:
 ```sh
 $ curl http://localhost:3000/secured/secret \
        -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
+# or, for example, with `httpie`
+$ http :3000/secured/secret -A bearer -a 'user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
 ```
 
 ## Path Table

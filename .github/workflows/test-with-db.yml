@@ -39,10 +39,10 @@ jobs:
         with:
           toolchain: nightly
 
-      - name: Install dependencies, compile, and test
-        run: |
-          cargo build
-          cargo test
+      - name: cargo build
+        run: cargo build
+
+      - name: cargo test
         env:
           DATABASE_URL: postgres://rest_user:rest_pass@localhost:5432/rest_db
           POSTGRES_HOST: localhost
