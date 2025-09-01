@@ -43,6 +43,7 @@ jobs:
         run: cargo build
 
       - name: cargo test
+        run: cargo test
         env:
           DATABASE_URL: postgres://rest_user:rest_pass@localhost:5432/rest_db
           POSTGRES_HOST: localhost
