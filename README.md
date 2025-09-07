@@ -16,11 +16,12 @@ is what you need.
 Once the server is up—setup/usage notes follow—you can just:
 
 ```sh
+# `curl`
 $ curl -X POST http://localhost:3000/api/token \
        -H 'Content-Type: application/json' \
        -H 'Accept: application/json' \
        -d '{"grant_type": "password", "username": "user", "password": "pass"}'
-# or, for example, with `httpie`
+# `httpie` (1 of many alternatives to curl)
 $ http POST :3000/api/token grant_type='password' username='user' password='pass'
 ```
 
@@ -37,9 +38,10 @@ Which—registering user if nonexistent—returns of the form:
 Then you can use this the regular way, for example:
 
 ```sh
+# `curl`
 $ curl http://localhost:3000/secured/secret \
        -H 'Authorization: Bearer user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
-# or, for example, with `httpie`
+# `httpie` (1 of many alternatives to curl)
 $ http :3000/secured/secret -A bearer -a 'user::regular::access_token::4151d642-eb27-4064-b87c-e3d2bfa10435'
 ```
 
@@ -84,19 +86,45 @@ $ http :3000/secured/secret -A bearer -a 'user::regular::access_token::4151d642-
 
 - application/x-www-form-urlencoded
 
-```ts
+```json
 {
-  // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
-  client_id?: string | null
-  // optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)
-  client_secret?: string | null
-  grant_type: enum[password, authorization_code, client_credentials, refresh_token]
-  // optional password (as used, for example, in RFC6749's password grant flow)
-  password?: string | null
-  // optional refresh token (as used, for example, in RFC6749's refresh grant flow)
-  refresh_token?: string | null
-  // optional username (as used, for example, in RFC6749's password grant flow)
-  username?: string | null
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)"
+    },
+    "client_secret": {
+      "type": "string",
+      "description": "Optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)"
+    },
+    "grant_type": {
+      "type": "string",
+      "enum": [
+        "password",
+        "authorization_code",
+        "client_credentials",
+        "refresh_token"
+      ]
+    },
+    "password": {
+      "type": "string",
+      "description": "Optional password (as used, for example, in RFC6749's password grant flow)"
+    },
+    "refresh_token": {
+      "type": "string",
+      "description": "Optional refresh token (as used, for example, in RFC6749's refresh grant flow)"
+    },
+    "username": {
+      "type": "string",
+      "description": "Optional username (as used, for example, in RFC6749's password grant flow)"
+    }
+  },
+  "required": [
+    "grant_type"
+  ],
+  "additionalProperties": false
 }
 ```
 
@@ -156,19 +184,46 @@ $ http :3000/secured/secret -A bearer -a 'user::regular::access_token::4151d642-
 
 ### #/components/schemas/TokenRequest
 
-```ts
+```json
 {
-  // optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)
-  client_id?: string | null
-  // optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)
-  client_secret?: string | null
-  grant_type: enum[password, authorization_code, client_credentials, refresh_token]
-  // optional password (as used, for example, in RFC6749's password grant flow)
-  password?: string | null
-  // optional refresh token (as used, for example, in RFC6749's refresh grant flow)
-  refresh_token?: string | null
-  // optional username (as used, for example, in RFC6749's password grant flow)
-  username?: string | null
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Optional client ID (as used, for example, in RFC6749's non password non refresh grant flow)"
+    },
+    "client_secret": {
+      "type": "string",
+      "description": "Optional client secret (as used, e.g., in RFC6749's non (password|refresh) grant flow)"
+    },
+    "grant_type": {
+      "type": "string",
+      "enum": [
+        "password",
+        "authorization_code",
+        "client_credentials",
+        "refresh_token"
+      ],
+      "description": "Type of grant as specified in OAuth 2.0"
+    },
+    "password": {
+      "type": "string",
+      "description": "Optional password (as used, for example, in RFC6749's password grant flow)"
+    },
+    "refresh_token": {
+      "type": "string",
+      "description": "Optional refresh token (as used, for example, in RFC6749's refresh grant flow)"
+    },
+    "username": {
+      "type": "string",
+      "description": "Optional username (as used, for example, in RFC6749's password grant flow)"
+    }
+  },
+  "required": [
+    "grant_type"
+  ],
+  "additionalProperties": false
 }
 ```
 
