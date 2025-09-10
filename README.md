@@ -172,12 +172,14 @@ $ http :3000/secured/secret -A bearer -a 'user::regular::access_token::4151d642-
 
 ```json
 {
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "string",
   "enum": [
     "password",
     "authorization_code",
     "client_credentials",
-    "refresh_token"
+    "refresh_token",
+    "invalid"
   ]
 }
 ```
